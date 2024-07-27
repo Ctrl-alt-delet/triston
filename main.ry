@@ -1,0 +1,16 @@
+import telebot
+import random
+
+bot = telebot.TeleBot('6808059267:AAErzyCBqUqYpHqGAZM9kynEogFdrWWOQVc')
+
+@bot.message_handler(commands=['go'])
+def oracle(message):
+    predictions = ["Ты встретишь свою любовь в ближайшие дни.",
+                   "Тебе следует быть осторожнее с финансами.",
+                   "В скором времени тебя ждет большой успех.",
+                   "Твоя интуиция тебя не подведет.",
+                   "Тебе стоит больше времени проводить на природе."]
+    
+    bot.send_message(message.chat.id, random.choice(predictions))
+
+bot.polling()
