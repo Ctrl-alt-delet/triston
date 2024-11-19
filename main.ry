@@ -1,16 +1,30 @@
-import telebot
-import random
+import requests
+from flask import Flask, request
 
-bot = telebot.TeleBot('6808059267:AAErzyCBqUqYpHqGAZM9kynEogFdrWWOQVc')
+app = Flask(__name__)
 
-@bot.message_handler(commands=['go'])
-def oracle(message):
-    predictions = ["Ты встретишь свою любовь в ближайшие дни.",
-                   "Тебе следует быть осторожнее с финансами.",
-                   "В скором времени тебя ждет большой успех.",
-                   "Твоя интуиция тебя не подведет.",
-                   "Тебе стоит больше времени проводить на природе."]
-    
-    bot.send_message(message.chat.id, random.choice(predictions))
+@app.route("/", methods="POST")
+def handle_request():
+ data = request.get_json()
+ command = data"command"
+ if command == "/start":
+ return "Привет! Я ваш бот. Чем могу помочь?"
+ elif command == "/help":
+ return "Вот список доступных команд:\n/start, /help, /settings, /about, /newchat, /search, /feedback, /setname, /mute, /stop, /deletebot, /faq, /support, /contact, /report, /invite, /stats, /news, /helpdesk, /upgrade"
+ else:
+ return "Неизвестная команда. Попробуйте /help для списка команд."
 
-bot.polling()
+@app.route("/setname", methods="POST")
+def set_name():
+ data = request.get_json()
+ new_name = data"new_name"
+ return f"Новое имя бота: {new_name}"
+
+@app.route("/search", methods="POST")
+def search():
+ data = request.get_json()
+ query = data"query"
+ return f"Результаты поиска по запросу '{query}'."
+
+if __name__ == "__main__":
+ app.run(host="0.0.0.0", port=8080, debug=True)
